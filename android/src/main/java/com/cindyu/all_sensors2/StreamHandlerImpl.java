@@ -74,11 +74,9 @@ public class StreamHandlerImpl implements EventChannel.StreamHandler{
         try {
             if (value == 0) {
                 far = false;
-                wakeLock.acquire();
             }
             else if (wakeLock.isHeld()) {
                 far = true;
-                wakeLock.release();
             }
         }catch (Exception e) {
             e.printStackTrace();
