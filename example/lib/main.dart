@@ -100,15 +100,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             padding: const EdgeInsets.all(16.0),
           ),
-          Padding(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text('Proximity: $_proximityNoWakeLockValues'),
-              ],
-            ),
-            padding: const EdgeInsets.all(16.0),
-          ),
         ],
       ),
     );
@@ -149,11 +140,6 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     }));
 
-    _streamSubscriptions.add(proximityNoWakeLockEvents!.listen((ProximityNoWakeLockEvent event) {
-      setState(() {
-        _proximityNoWakeLockValues = event.getValue();
-      });
-    }));
     _streamSubscriptions.add(proximityNoWakeLockEvents!.listen((ProximityNoWakeLockEvent event) {
       setState(() {
         _proximityNoWakeLockValues = event.getValue();
