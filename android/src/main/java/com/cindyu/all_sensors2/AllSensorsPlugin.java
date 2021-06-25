@@ -25,12 +25,14 @@ public class AllSensorsPlugin implements FlutterPlugin {
   private static final String GYROSCOPE_CHANNEL_NAME = "cindyu.com/all_sensors2/gyroscope";
   private static final String USER_ACCELEROMETER_CHANNEL_NAME = "cindyu.com/all_sensors2/user_accel";
   private static final String PROXIMITY_CHANNELNAME = "cindyu.com/all_sensors2/proximity";
+  private static final String PROXIMITYNOWAKELOCK_CHANNELNAME = "cindyu.com/all_sensors2/proximityNoWakeLock";
 
 
   private EventChannel accelerometerChannel;
   private EventChannel userAccelChannel;
   private EventChannel gyroscopeChannel;
   private EventChannel proximityChannel;
+  private EventChannel proximityNoWakeLockChannel;
 
 
   /** Plugin registration. */
@@ -59,6 +61,10 @@ public class AllSensorsPlugin implements FlutterPlugin {
     proximityChannel.setStreamHandler(
             new StreamHandlerImpl((SensorManager)context.getSystemService(context.SENSOR_SERVICE), Sensor.TYPE_PROXIMITY,
                     (PowerManager) context.getSystemService(POWER_SERVICE)));
+
+    proximityNoWakeLockChannel = new EventChannel(messenger, PROXIMITYNOWAKELOCK_CHANNELNAME);
+    proximityNoWakeLockChannel.setStreamHandler(
+            new StreamHandlerImpl((SensorManager)context.getSystemService(context.SENSOR_SERVICE), Sensor.TYPE_PROXIMITY));
   }
 
   @Override
@@ -73,5 +79,7 @@ public class AllSensorsPlugin implements FlutterPlugin {
     userAccelChannel.setStreamHandler(null);
     gyroscopeChannel.setStreamHandler(null);
     proximityChannel.setStreamHandler(null);
+    proximityNoWakeLockChannel.setStreamHandler(null);
+
   }
 }
