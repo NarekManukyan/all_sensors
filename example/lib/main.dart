@@ -134,11 +134,11 @@ class _MyHomePageState extends State<MyHomePage> {
         _userAccelerometerValues = <double>[event.x, event.y, event.z];
       });
     }));
-    _streamSubscriptions.add(proximityEvents!.listen((ProximityEvent event) {
-      setState(() {
-        _proximityValues = event.getValue();
-      });
-    }));
+    // _streamSubscriptions.add(proximityEvents!.listen((ProximityEvent event) {
+    //   setState(() {
+    //     _proximityValues = event.getValue();
+    //   });
+    // }));
 
     _streamSubscriptions.add(proximityNoWakeLockEvents!.listen((ProximityNoWakeLockEvent event) {
       setState(() {
