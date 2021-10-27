@@ -34,6 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<double> _userAccelerometerValues = <double>[];
   List<double> _gyroscopeValues = <double>[];
   bool _proximityValues = false;
+  bool _proximityNoWakeLockValues = false;
   List<StreamSubscription<dynamic>> _streamSubscriptions =
       <StreamSubscription<dynamic>>[];
 
@@ -90,6 +91,15 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             padding: const EdgeInsets.all(16.0),
           ),
+          Padding(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text('Proximity: $_proximityNoWakeLockValues'),
+              ],
+            ),
+            padding: const EdgeInsets.all(16.0),
+          ),
         ],
       ),
     );
@@ -127,6 +137,12 @@ class _MyHomePageState extends State<MyHomePage> {
     _streamSubscriptions.add(proximityEvents!.listen((ProximityEvent event) {
       setState(() {
         _proximityValues = event.getValue();
+      });
+    }));
+
+    _streamSubscriptions.add(proximityNoWakeLockEvents!.listen((ProximityNoWakeLockEvent event) {
+      setState(() {
+        _proximityNoWakeLockValues = event.getValue();
       });
     }));
   }

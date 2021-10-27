@@ -33,6 +33,12 @@ NSNotificationCenter *proximityObserver;
     [FlutterEventChannel eventChannelWithName:@"cindyu.com/all_sensors2/proximity"
                               binaryMessenger:[registrar messenger]];
     [proximityChannel setStreamHandler:proximityStreamHandler];
+
+    CDYProximityStreamHandler* proximityNoWakeLockStreamHandler = [[CDYProximityStreamHandler alloc] init];
+        FlutterEventChannel* proximityNoWakeLockChannel =
+        [FlutterEventChannel eventChannelWithName:@"cindyu.com/all_sensors2/proximityNoWakeLock"
+                                  binaryMessenger:[registrar messenger]];
+        [proximityChannel setStreamHandler:proximityStreamHandler];
 }
 
 @end

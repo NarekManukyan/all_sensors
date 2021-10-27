@@ -45,5 +45,7 @@ proximityEvents.listen((ProximityEvent event) {
   });
 })
 ```
+### Add
+If you want to use proximity sensor with no wakelock, use ```proximityNoWakeLockEvents``` (only supported on android)
 
 Referenced https://pub.dev/packages/sensors

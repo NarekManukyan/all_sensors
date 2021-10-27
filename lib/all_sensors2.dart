@@ -14,6 +14,9 @@ const EventChannel _gyroscopeEventChannel =
 const EventChannel _proximityEventChannel =
     EventChannel('cindyu.com/all_sensors2/proximity');
 
+const EventChannel _proximityNoWakeLockEventChannel =
+    EventChannel('cindyu.com/all_sensors2/proximityNoWakeLock');
+
 class AccelerometerEvent {
   /// Acceleration force along the x axis (including gravity) measured in m/s^2.
   final double x;
@@ -78,6 +81,20 @@ class ProximityEvent {
   String toString() => proximity == 0 ? 'true' : 'false';
 }
 
+class ProximityNoWakeLockEvent {
+  /// Proximity value Yes or No
+  final double proximityNoWakeLock;
+
+  ProximityNoWakeLockEvent(this.proximityNoWakeLock);
+
+//  double getValue() => proximity;
+
+  bool getValue() => proximityNoWakeLock == 0 ? true : false;
+
+  @override
+  String toString() => proximityNoWakeLock == 0 ? 'true' : 'false';
+}
+
 AccelerometerEvent _listToAccelerometerEvent(List<double> list) {
   return new AccelerometerEvent(list[0], list[1], list[2]);
 }
@@ -94,10 +111,15 @@ ProximityEvent _listToProximityEvent(List<double> list) {
   return new ProximityEvent(list[0]);
 }
 
+ProximityNoWakeLockEvent _listToProximityNoWakeLockEvent(List<double> list) {
+  return new ProximityNoWakeLockEvent(list[0]);
+}
+
 Stream<AccelerometerEvent>? _accelerometerEvents;
 Stream<GyroscopeEvent>? _gyroscopeEvents;
 Stream<UserAccelerometerEvent>? _userAccelerometerEvents;
 Stream<ProximityEvent>? _proximityEvents;
+Stream<ProximityNoWakeLockEvent>? _proximityNoWakeLockEvents;
 
 /// A broadcast stream of events from the device accelerometer.
 Stream<AccelerometerEvent>? get accelerometerEvents {
@@ -138,4 +160,15 @@ Stream<ProximityEvent>? get proximityEvents {
       .map((dynamic event) => _listToProximityEvent(event.cast<double>()));
 
   return _proximityEvents;
+}
+
+/// A broadcast stream of events from the device proximity without WakeLock
+Stream<ProximityNoWakeLockEvent>? get proximityNoWakeLockEvents {
+  if(_proximityNoWakeLockEvents == null) {
+    _proximityNoWakeLockEvents = _proximityNoWakeLockEventChannel
+        .receiveBroadcastStream()
+        .map((dynamic event) =>
+        _listToProximityNoWakeLockEvent(event.cast<double>()));
+  }
+  return _proximityNoWakeLockEvents;
 }

@@ -29,16 +29,19 @@ public class StreamHandlerImpl implements EventChannel.StreamHandler{
     public StreamHandlerImpl(SensorManager sensorManager, int sensorType, PowerManager powerManager) {
         this(sensorManager, sensorType);
         this.powerManager = powerManager;
-        try {
-            field = PowerManager.class.getField("PROXIMITY_SCREEN_OFF_WAKE_LOCK").getInt(null);
-        } catch (Throwable ignored) {}
-        this.wakeLock = powerManager.newWakeLock(field, "AllSensors::Wakelock");
+        if(powerManager != null) {
+            try {
+                field = PowerManager.class.getField("PROXIMITY_SCREEN_OFF_WAKE_LOCK").getInt(null);
+            } catch (Throwable ignored) {}
+            this.wakeLock = powerManager.newWakeLock(field, "AllSensors::Wakelock");
+        }
+
     }
 
     @Override
     public void onListen(Object arguments, EventChannel.EventSink events) {
         onCancelCalled = false;
-        sensorEventListener = createSensorEventListener(events, sensorManager);
+        sensorEventListener = createSensorEventListener(events, sensorManager, powerManager);
         sensorManager.registerListener(sensorEventListener, sensor, sensorManager.SENSOR_DELAY_NORMAL);
     }
 
@@ -48,7 +51,7 @@ public class StreamHandlerImpl implements EventChannel.StreamHandler{
         if(far) sensorManager.unregisterListener(sensorEventListener);
     }
 
-    SensorEventListener createSensorEventListener(final EventChannel.EventSink events, final SensorManager sensorManager) {
+    SensorEventListener createSensorEventListener(final EventChannel.EventSink events, final SensorManager sensorManager, final PowerManager powerManager) {
         return new SensorEventListener() {
             @Override
             public void onAccuracyChanged(Sensor sensor, int accuracy) {}
@@ -60,7 +63,7 @@ public class StreamHandlerImpl implements EventChannel.StreamHandler{
                 for (int i = 0; i < event.values.length; i++) {
                     sensorValues[i] = event.values[i];
                 }
-                if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+                if (event.sensor.getType() == Sensor.TYPE_PROXIMITY && powerManager != null) {
                     if(onCancelCalled && far) sensorManager.unregisterListener(this);
                     else setWakeLock(sensorValues[0]);
                 }
